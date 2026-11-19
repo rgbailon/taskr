@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Task } from "../domain/models";
 import { useWorkspace } from "../state/WorkspaceProvider";
 import { useToast } from "../state/ToastProvider";
@@ -9,19 +9,18 @@ import { ProjectMark } from "./ProjectMark";
 import { StatusPill } from "./StatusPill";
 import { ProgressBar } from "./ProgressBar";
 import { TimerRing } from "./TimerRing";
+import { ConfirmDialog } from "./Modal";
 
 interface FocusCardProps {
   task: Task;
-  autoStart: boolean;
-  onAutoStartConsumed: () => void;
+  locked: boolean;
   onOpenDetails: () => void;
   onOpenProject: (projectId: string) => void;
 }
 
 export function FocusCard({
   task,
-  autoStart,
-  onAutoStartConsumed,
+  locked,
   onOpenDetails,
   onOpenProject,
 }: FocusCardProps) {
@@ -29,19 +28,11 @@ export function FocusCard({
   const { pushToast } = useToast();
   const project = workspace?.projectById(task.projectId) ?? null;
   const timer = useFocusTimerContext();
+  const [confirmEnd, setConfirmEnd] = useState(false);
   const timerRef = useRef(timer);
   timerRef.current = timer;
   const taskRef = useRef(task);
   taskRef.current = task;
-
-  const autoStartedRef = useRef(false);
-
-  useEffect(() => {
-    if (!autoStart || autoStartedRef.current) return;
-    autoStartedRef.current = true;
-    timerRef.current.startForTask(taskRef.current);
-    onAutoStartConsumed();
-  }, [autoStart, onAutoStartConsumed]);
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -64,14 +55,21 @@ export function FocusCard({
       <div className="focus-card-top">
         <div className="focus-project-line">
           {project ? (
-            <button
-              type="button"
-              className="project-chip"
-              onClick={() => onOpenProject(project.id)}
-            >
-              <ProjectMark color={project.color} size={24} muted />
-              <span>{project.name}</span>
-            </button>
+            locked ? (
+              <span className="project-chip is-static">
+                <ProjectMark color={project.color} size={24} muted />
+                <span>{project.name}</span>
+              </span>
+            ) : (
+              <button
+                type="button"
+                className="project-chip"
+                onClick={() => onOpenProject(project.id)}
+              >
+                <ProjectMark color={project.color} size={24} muted />
+                <span>{project.name}</span>
+              </button>
+            )
           ) : (
             <span className="project-chip is-static">
               <span className="project-mark is-muted" style={{ width: 24, height: 24 }}>
@@ -141,26 +139,40 @@ export function FocusCard({
           >
             <Icon name={timer.isRunning ? "pause" : "play"} size={14} />
             {timer.isRunning
-              ? "Pause focus"
+              ? locked
+                ? "Pause & unlock"
+                : "Pause focus"
               : timer.status === "paused" && timer.sessionTaskId === task.id
                 ? "Resume focus"
                 : "Start focus"}
           </button>
           {timer.status !== "idle" ? (
-            <button
-              type="button"
-              className="icon-button"
-              onClick={timer.reset}
-              title="Reset the focus timer"
-              aria-label="Reset the focus timer"
-            >
-              <Icon name="reset" size={17} />
+            locked ? (
+              <button
+                type="button"
+                className="text-button focus-end"
+                onClick={() => setConfirmEnd(true)}
+              >
+                End session
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="icon-button"
+                onClick={timer.reset}
+                title="Reset the focus timer"
+                aria-label="Reset the focus timer"
+              >
+                <Icon name="reset" size={17} />
+              </button>
+            )
+          ) : null}
+          {!locked ? (
+            <button type="button" className="text-link" onClick={onOpenDetails}>
+              Open task details
+              <Icon name="arrow-right" size={14} />
             </button>
           ) : null}
-          <button type="button" className="text-link" onClick={onOpenDetails}>
-            Open task details
-            <Icon name="arrow-right" size={14} />
-          </button>
         </div>
         <span className="focus-meta">
           <span className="focus-estimate">Estimate · {formatDuration(task.estimateMin)}</span>
@@ -177,6 +189,19 @@ export function FocusCard({
           </button>
         </span>
       </div>
+
+      <ConfirmDialog
+        open={confirmEnd}
+        title="End this focus session?"
+        description="The timer stops and Tasker unlocks. Time from this session will not be added to the task's logged focus."
+        confirmLabel="End session"
+        danger
+        onClose={() => setConfirmEnd(false)}
+        onConfirm={() => {
+          setConfirmEnd(false);
+          timer.reset();
+        }}
+      />
     </section>
   );
 }

@@ -24,6 +24,7 @@ interface FocusTimerValue {
   totalSeconds: number;
   progress: number;
   isRunning: boolean;
+  isLocked: boolean;
   sessionTaskId: string | null;
   startForTask: (task: Task) => void;
   toggleForTask: (task: Task) => void;
@@ -110,6 +111,10 @@ export function FocusTimerProvider({ children }: { children: ReactNode }) {
     }
   }, [workspace, timer]);
 
+  const sessionId = sessionRef.current?.id ?? null;
+  const sessionTask = sessionId && workspace ? workspace.taskById(sessionId) : null;
+  const isLocked = timer.status === "running" && Boolean(sessionTask && !sessionTask.isDone);
+
   const value = useMemo<FocusTimerValue>(
     () => ({
       status: timer.status,
@@ -117,12 +122,13 @@ export function FocusTimerProvider({ children }: { children: ReactNode }) {
       totalSeconds: timer.totalSeconds,
       progress: timer.progress,
       isRunning: timer.isRunning,
-      sessionTaskId: sessionRef.current?.id ?? null,
+      isLocked,
+      sessionTaskId: sessionId,
       startForTask,
       toggleForTask,
       reset,
     }),
-    [timer.status, timer.remaining, timer.totalSeconds, timer.progress, timer.isRunning, startForTask, toggleForTask, reset],
+    [isLocked, sessionId, timer.status, timer.remaining, timer.totalSeconds, timer.progress, timer.isRunning, startForTask, toggleForTask, reset],
   );
 
   return <FocusTimerContext.Provider value={value}>{children}</FocusTimerContext.Provider>;

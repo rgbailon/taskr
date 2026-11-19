@@ -6,7 +6,8 @@ Tasker is designed around one idea: a short list of real tasks, one clear priori
 
 ## What is included
 
-- **Focus workspace** — a single priority task with a 25-minute focus timer, checklist progress, live task notes, daily progress, and recent activity.
+- **Focus workspace** — a single priority task with a 25-minute focus timer, checklist progress, live task notes, daily progress, and recent activity. Starting the timer locks Tasker to that task: navigation, search, and the other views disappear until you pause or finish the session.
+- **Focus lock** — while the timer runs, the sidebar and command palette are hidden, other tasks are out of reach, and the only controls are the timer, the task checklist, notes, and Mark done. Pause to unlock Tasker; resume to lock it again.
 - **Inbox** — quick capture, inline project and estimate triage, and one-click scheduling for today or tomorrow.
 - **Upcoming** — a week strip, per-day plans, focus blocks, weekly stats, and direct task completion.
 - **Projects** — progress toward a milestone, status filters, project notes, and a health summary.

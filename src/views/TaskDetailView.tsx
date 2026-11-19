@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { TaskPriority, TaskStatus } from "../domain/types";
 import { ESTIMATE_OPTIONS } from "../domain/types";
 import { useWorkspace } from "../state/WorkspaceProvider";
+import { useFocusTimerContext } from "../state/FocusTimerProvider";
 import { useToast } from "../state/ToastProvider";
 import {
   formatActivityMoment,
@@ -29,6 +30,7 @@ export function TaskDetailView({
   onStartFocus: () => void;
 }) {
   const { workspace, update, beginFocus } = useWorkspace();
+  const timer = useFocusTimerContext();
   const { pushToast } = useToast();
   const [criterionText, setCriterionText] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -73,6 +75,7 @@ export function TaskDetailView({
 
   const startFocus = () => {
     beginFocus(task.id);
+    timer.startForTask(task);
     onStartFocus();
   };
 

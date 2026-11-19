@@ -47,6 +47,77 @@
   margin-bottom: 22px;
 }
 
+.focus-view.is-locked {
+  max-width: 760px;
+  padding-top: 10px;
+}
+
+.focus-lock-head {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 13px;
+  margin-bottom: 18px;
+}
+
+.focus-lock-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 27px;
+  padding: 0 11px;
+  border-radius: 999px;
+  background: var(--teal-tint);
+  color: var(--teal-deep);
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.015em;
+}
+
+.focus-lock-head p {
+  font-size: 12.5px;
+  color: var(--muted);
+}
+
+.focus-view.is-locked .focus-card {
+  border-color: var(--teal-tint-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.focus-notes-card {
+  margin-top: 18px;
+  padding: 20px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.focus-notes-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.focus-notes-head h2 {
+  margin-top: 4px;
+  font-size: 15px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.focus-notes-box {
+  min-height: 110px;
+}
+
+.focus-end {
+  color: var(--danger);
+}
+
+.focus-end:hover {
+  color: var(--danger-hover);
+}
+
 .focus-card {
   display: flex;
   flex-direction: column;

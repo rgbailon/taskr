@@ -5,7 +5,13 @@ import { formatSavedTime } from "../lib/date";
 import { LogoMark } from "./LogoMark";
 import { Icon } from "./Icon";
 
-export function TitleBar({ breadcrumb }: { breadcrumb: string }) {
+export function TitleBar({
+  breadcrumb,
+  focusLocked = false,
+}: {
+  breadcrumb: string;
+  focusLocked?: boolean;
+}) {
   const { saveState, lastSavedAt, storagePath, repositoryKind } = useWorkspace();
   const { pushToast } = useToast();
 
@@ -106,6 +112,12 @@ export function TitleBar({ breadcrumb }: { breadcrumb: string }) {
       </div>
 
       <div className="titlebar-right">
+        {focusLocked ? (
+          <span className="focus-lock-chip" role="status">
+            <Icon name="lock" size={12} />
+            Focus locked
+          </span>
+        ) : null}
         <span className={`save-chip save-${saveState}`} title={tooltip} aria-live="polite">
           <span className="save-dot" aria-hidden="true" />
           <span>{saveLabel}</span>

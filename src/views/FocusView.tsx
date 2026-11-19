@@ -1,6 +1,6 @@
-import { useState } from "react";
 import { useWorkspace } from "../state/WorkspaceProvider";
 import { useToast } from "../state/ToastProvider";
+import { useFocusTimerContext } from "../state/FocusTimerProvider";
 import {
   formatActivityMoment,
   formatDuration,
@@ -16,23 +16,21 @@ import { ProgressBar } from "../components/ProgressBar";
 import { ProjectDot } from "../components/ProjectMark";
 
 interface FocusViewProps {
+  locked: boolean;
   onOpenTask: (taskId: string) => void;
   onOpenProject: (projectId: string) => void;
   onPlanDay: () => void;
-  autoStartFocus: boolean;
-  onAutoStartConsumed: () => void;
 }
 
 export function FocusView({
+  locked,
   onOpenTask,
   onOpenProject,
   onPlanDay,
-  autoStartFocus,
-  onAutoStartConsumed,
 }: FocusViewProps) {
   const { workspace, update, saveState, beginFocus } = useWorkspace();
   const { pushToast } = useToast();
-  const [pickedAutoStart, setPickedAutoStart] = useState(false);
+  const timer = useFocusTimerContext();
 
   if (!workspace) return null;
 
@@ -57,8 +55,9 @@ export function FocusView({
     .slice(0, 3);
 
   const pickTask = (taskId: string) => {
+    const task = workspace?.taskById(taskId);
+    if (task) timer.startForTask(task);
     beginFocus(taskId);
-    setPickedAutoStart(true);
   };
 
   const finishTask = (taskId: string, title: string) => {
@@ -69,31 +68,37 @@ export function FocusView({
   return (
     <>
       <main className="main">
-        <div className="view focus-view">
-          <header className="view-head">
-          <div>
-            <p className="eyebrow">{formatLongDate(now)}</p>
-            <h1 className="page-title">
-              {greetingFor(now)}
-              {firstName ? `, ${firstName}` : ""}
-            </h1>
-            <p className="subtitle">One clear priority, then the next.</p>
-          </div>
-          <button type="button" className="button button-quiet" onClick={onPlanDay}>
-            <Icon name="spark" size={15} />
-            Plan day
-          </button>
-        </header>
+        <div className={`view focus-view${locked ? " is-locked" : ""}`}>
+          {locked ? (
+            <header className="focus-lock-head">
+              <span className="focus-lock-badge">
+                <Icon name="lock" size={13} />
+                Focus locked
+              </span>
+              <p>Tasker stays on this task until you pause the timer or finish it.</p>
+            </header>
+          ) : (
+            <header className="view-head">
+            <div>
+              <p className="eyebrow">{formatLongDate(now)}</p>
+              <h1 className="page-title">
+                {greetingFor(now)}
+                {firstName ? `, ${firstName}` : ""}
+              </h1>
+              <p className="subtitle">One clear priority, then the next.</p>
+            </div>
+            <button type="button" className="button button-quiet" onClick={onPlanDay}>
+              <Icon name="spark" size={15} />
+              Plan day
+            </button>
+          </header>
+          )}
 
         {activeTask && !activeTask.isDone ? (
           <FocusCard
             key={activeTask.id}
             task={activeTask}
-            autoStart={autoStartFocus || pickedAutoStart}
-            onAutoStartConsumed={() => {
-              setPickedAutoStart(false);
-              onAutoStartConsumed();
-            }}
+            locked={locked}
             onOpenDetails={() => onOpenTask(activeTask.id)}
             onOpenProject={onOpenProject}
           />
@@ -148,6 +153,31 @@ export function FocusView({
           </section>
         )}
 
+        {locked && activeTask ? (
+          <section className="card focus-notes-card" aria-labelledby="focus-notes-title">
+            <div className="focus-notes-head">
+              <div>
+                <span className="popover-label">IN THIS SESSION</span>
+                <h2 id="focus-notes-title">Task notes</h2>
+              </div>
+              <span className={`save-inline save-${saveState}`}>
+                <span className="save-dot" aria-hidden="true" />
+                {saveState === "saving" ? "Saving…" : saveState === "error" ? "Not saved" : "Saved"}
+              </span>
+            </div>
+            <textarea
+              className="notes-box focus-notes-box"
+              value={activeTask.notes}
+              placeholder="Add a note, a blocker, or the next step…"
+              aria-label={`Notes for ${activeTask.title}`}
+              onChange={(event) =>
+                update((current) => current.setTaskNotes(activeTask.id, event.target.value))
+              }
+            />
+          </section>
+        ) : null}
+
+        {!locked ? (
         <section className="up-next" aria-labelledby="up-next-title">
           <div className="section-head">
             <h2 id="up-next-title">Up next</h2>
@@ -196,9 +226,11 @@ export function FocusView({
             A short break between tasks helps keep the next block useful.
           </p>
         </section>
+        ) : null}
         </div>
       </main>
 
+      {!locked ? (
       <aside className="rail" aria-label="Today">
         <div className="rail-head">
           <h2>Today</h2>
@@ -293,6 +325,7 @@ export function FocusView({
 
         <p className="rail-quote">A quiet place for your working notes.</p>
       </aside>
+      ) : null}
     </>
   );
 }

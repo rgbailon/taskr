@@ -9,6 +9,7 @@ import { PlanDayModal } from "./components/PlanDayModal";
 import { ShortcutsDialog } from "./components/ShortcutsDialog";
 import { LogoMark } from "./components/LogoMark";
 import { useWorkspace } from "./state/WorkspaceProvider";
+import { useFocusTimerContext } from "./state/FocusTimerProvider";
 import { FocusView } from "./views/FocusView";
 import { InboxView } from "./views/InboxView";
 import { UpcomingView } from "./views/UpcomingView";
@@ -19,32 +20,41 @@ type Overlay = "palette" | "quick-add" | "project" | "plan-day" | "shortcuts" | 
 
 export function App() {
   const { workspace, ready, focusStartRequest } = useWorkspace();
+  const { isLocked: isFocusLocked } = useFocusTimerContext();
   const [route, setRoute] = useState<Route>({ view: "focus" });
   const [overlay, setOverlay] = useState<Overlay>(null);
   const [quickAddPreset, setQuickAddPreset] = useState<QuickAddPreset>({});
-  const [autoStartFocus, setAutoStartFocus] = useState(false);
   const historyRef = useRef<Route[]>([]);
 
-  const navigate = useCallback((next: Route) => {
-    setRoute((current) => {
-      if (routeKey(current) === routeKey(next)) return current;
-      historyRef.current = [...historyRef.current.slice(-14), current];
-      return next;
-    });
-  }, []);
+  const navigate = useCallback(
+    (next: Route) => {
+      if (isFocusLocked && next.view !== "focus") return;
+      setRoute((current) => {
+        if (routeKey(current) === routeKey(next)) return current;
+        historyRef.current = [...historyRef.current.slice(-14), current];
+        return next;
+      });
+    },
+    [isFocusLocked],
+  );
 
   const goBack = useCallback(() => {
+    if (isFocusLocked) return;
     setRoute((current) => {
       const previous = historyRef.current.pop();
       if (previous) return previous;
       return current.view === "task" ? { view: "inbox" } : { view: "focus" };
     });
-  }, []);
+  }, [isFocusLocked]);
 
-  const openQuickAdd = useCallback((preset: QuickAddPreset = {}) => {
-    setQuickAddPreset(preset);
-    setOverlay("quick-add");
-  }, []);
+  const openQuickAdd = useCallback(
+    (preset: QuickAddPreset = {}) => {
+      if (isFocusLocked) return;
+      setQuickAddPreset(preset);
+      setOverlay("quick-add");
+    },
+    [isFocusLocked],
+  );
 
   const closeOverlay = useCallback(() => setOverlay(null), []);
 
@@ -62,11 +72,17 @@ export function App() {
   useEffect(() => {
     if (focusStartRequest === 0) return;
     navigate({ view: "focus" });
-    setAutoStartFocus(true);
   }, [focusStartRequest, navigate]);
 
   useEffect(() => {
+    if (!isFocusLocked) return;
+    setOverlay(null);
+    setRoute((current) => (current.view === "focus" ? current : { view: "focus" }));
+  }, [isFocusLocked]);
+
+  useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
+      if (isFocusLocked) return;
       const mod = event.metaKey || event.ctrlKey;
       const target = event.target as HTMLElement | null;
       const typing =
@@ -118,7 +134,7 @@ export function App() {
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [navigate, openQuickAdd, goBack]);
+  }, [isFocusLocked, navigate, openQuickAdd, goBack]);
 
   if (!ready || !workspace) {
     return (
@@ -131,35 +147,39 @@ export function App() {
   }
 
   return (
-    <div className="app-shell">
-      <TitleBar breadcrumb={breadcrumbFor(route, projectName)} />
+    <div className={`app-shell${isFocusLocked ? " is-focus-locked" : ""}`}>
+      <TitleBar
+        breadcrumb={isFocusLocked ? "Focus session" : breadcrumbFor(route, projectName)}
+        focusLocked={isFocusLocked}
+      />
 
-      <div className="app-body">
-        <Sidebar
-          route={route}
-          onNavigate={navigate}
-          onNewProject={() => setOverlay("project")}
-          onShowShortcuts={() => setOverlay("shortcuts")}
-        />
-
-        {route.view === "focus" ? (
-          <FocusView
-            onOpenTask={(taskId) => navigate({ view: "task", taskId })}
-            onOpenProject={(projectId) => navigate({ view: "project", projectId })}
-            onPlanDay={() => setOverlay("plan-day")}
-            autoStartFocus={autoStartFocus}
-            onAutoStartConsumed={() => setAutoStartFocus(false)}
+      <div className={`app-body${isFocusLocked ? " is-focus-locked" : ""}`}>
+        {!isFocusLocked ? (
+          <Sidebar
+            route={route}
+            onNavigate={navigate}
+            onNewProject={() => setOverlay("project")}
+            onShowShortcuts={() => setOverlay("shortcuts")}
           />
         ) : null}
 
-        {route.view === "inbox" ? (
+        {isFocusLocked || route.view === "focus" ? (
+          <FocusView
+            locked={isFocusLocked}
+            onOpenTask={(taskId) => navigate({ view: "task", taskId })}
+            onOpenProject={(projectId) => navigate({ view: "project", projectId })}
+            onPlanDay={() => setOverlay("plan-day")}
+          />
+        ) : null}
+
+        {!isFocusLocked && route.view === "inbox" ? (
           <InboxView
             onOpenTask={(taskId) => navigate({ view: "task", taskId })}
             onNewTask={() => openQuickAdd()}
           />
         ) : null}
 
-        {route.view === "upcoming" ? (
+        {!isFocusLocked && route.view === "upcoming" ? (
           <UpcomingView
             onOpenTask={(taskId) => navigate({ view: "task", taskId })}
             onNewTaskForDate={(date, time) =>
@@ -168,7 +188,7 @@ export function App() {
           />
         ) : null}
 
-        {route.view === "project" ? (
+        {!isFocusLocked && route.view === "project" ? (
           <ProjectView
             projectId={route.projectId}
             onOpenTask={(taskId) => navigate({ view: "task", taskId })}
@@ -177,7 +197,7 @@ export function App() {
           />
         ) : null}
 
-        {route.view === "task" ? (
+        {!isFocusLocked && route.view === "task" ? (
           <TaskDetailView
             taskId={route.taskId}
             onBack={goBack}
@@ -187,34 +207,38 @@ export function App() {
         ) : null}
       </div>
 
-      <CommandPalette
-        open={overlay === "palette"}
-        onClose={closeOverlay}
-        onNavigate={(next) => {
-          closeOverlay();
-          navigate(next);
-        }}
-        onNewTask={() => openQuickAdd()}
-        onNewProject={() => setOverlay("project")}
-        onPlanDay={() => setOverlay("plan-day")}
-        onShowShortcuts={() => setOverlay("shortcuts")}
-      />
+      {!isFocusLocked ? (
+        <>
+          <CommandPalette
+            open={overlay === "palette"}
+            onClose={closeOverlay}
+            onNavigate={(next) => {
+              closeOverlay();
+              navigate(next);
+            }}
+            onNewTask={() => openQuickAdd()}
+            onNewProject={() => setOverlay("project")}
+            onPlanDay={() => setOverlay("plan-day")}
+            onShowShortcuts={() => setOverlay("shortcuts")}
+          />
 
-      <QuickAddModal
-        open={overlay === "quick-add"}
-        preset={quickAddPreset}
-        onClose={closeOverlay}
-      />
+          <QuickAddModal
+            open={overlay === "quick-add"}
+            preset={quickAddPreset}
+            onClose={closeOverlay}
+          />
 
-      <ProjectModal
-        open={overlay === "project"}
-        onClose={closeOverlay}
-        onCreated={(projectId) => navigate({ view: "project", projectId })}
-      />
+          <ProjectModal
+            open={overlay === "project"}
+            onClose={closeOverlay}
+            onCreated={(projectId) => navigate({ view: "project", projectId })}
+          />
 
-      <PlanDayModal open={overlay === "plan-day"} onClose={closeOverlay} />
+          <PlanDayModal open={overlay === "plan-day"} onClose={closeOverlay} />
 
-      <ShortcutsDialog open={overlay === "shortcuts"} onClose={closeOverlay} />
+          <ShortcutsDialog open={overlay === "shortcuts"} onClose={closeOverlay} />
+        </>
+      ) : null}
     </div>
   );
 }
