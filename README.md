@@ -66,11 +66,11 @@ The exact path for the current machine is shown in the workspace menu in the sid
 
 Saves are debounced and serialized in the UI, then written in one SQLite transaction in the Rust backend. Tables keep tasks, projects, activities, and workspace metadata (profile, preferences, focus, timestamps), with indexed project, status, and schedule columns. The complete domain record is stored alongside each row so fields such as acceptance criteria round-trip untouched. The backend rejects payloads larger than 8 MB and anything that is not a version-1 workspace.
 
-If Tasker finds a legacy `workspace.json` from an earlier build, it imports it once on first launch and renames it to `workspace.json.migrated` as a backup. Otherwise, new installations start with the sample workspace.
+If Tasker finds a legacy `workspace.json` from an earlier build, it imports it once on first launch and renames it to `workspace.json.migrated` as a backup. Otherwise, new installations start with an empty workspace.
 
-To export a copy, open the profile menu in the bottom-left and choose **Export a copy**. Exports are JSON files written to the app-data `exports/` folder. To start over, choose **Reset sample data**, which clears the database and restores the sample workspace.
+To export a copy, open the profile menu in the bottom-left and choose **Export a copy**. Exports are JSON files written to the app-data `exports/` folder.
 
-The appearance choice is a device preference, not workspace content. It is stored in the webview's local storage under `tasker.theme.v1`, so resetting the workspace does not change your theme. The `theme-init.js` script applies it before first paint to avoid a light flash when the app opens in dark mode.
+The appearance choice is a device preference, not workspace content. It is stored in the webview's local storage under `tasker.theme.v1`, so changing the workspace does not change your theme. The `theme-init.js` script applies it before first paint to avoid a light flash when the app opens in dark mode.
 
 ## Keyboard shortcuts
 
@@ -92,7 +92,6 @@ The appearance choice is a device preference, not workspace content. It is store
 src/
   app/            route types and helpers
   components/     title bar, sidebar, dialogs, task widgets
-  data/           seed workspace
   domain/         immutable models, types, persistence adapters
   hooks/          focus timer
   lib/            date, id, and platform helpers
@@ -112,10 +111,10 @@ cd src-tauri
 cargo test
 ```
 
-The Rust unit tests cover payload validation, SQLite round-trips, snapshot replacement, reset, and legacy JSON import.
+The Rust unit tests cover payload validation, SQLite round-trips, snapshot replacement, table clearing, and legacy JSON import.
 
 ## Notes
 
 - There is no cloud sync, account system, or telemetry. Tasker is deliberately a single-user, single-machine workspace.
-- Sample data is generated relative to the current date, so the demo always looks current.
+- New workspaces start empty; add your first task from the Inbox or the quick-add dialog.
 - The browser preview is a development convenience; the desktop build is the intended experience.

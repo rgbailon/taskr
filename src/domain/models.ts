@@ -395,6 +395,19 @@ export class Project {
 export class Workspace {
   private constructor(private readonly data: WorkspaceData) {}
 
+  static empty(): Workspace {
+    return new Workspace({
+      version: 1,
+      profile: { name: "", role: "", workspace: "My workspace" },
+      projects: [],
+      tasks: [],
+      activities: [],
+      preferences: { focusMinutes: 25, breakMinutes: 5 },
+      focusTaskId: null,
+      createdAt: nowIso(),
+    });
+  }
+
   static fromJSON(raw: WorkspaceData): Workspace {
     const projectIds = new Set((raw.projects ?? []).map((project) => project.id));
     const preferences = raw.preferences ?? { focusMinutes: 25, breakMinutes: 5 };
@@ -412,9 +425,9 @@ export class Workspace {
     return new Workspace({
       version: 1,
       profile: {
-        name: raw.profile?.name?.trim() || "Maya Chen",
-        role: raw.profile?.role?.trim() || "Developer",
-        workspace: raw.profile?.workspace?.trim() || "Maya’s space",
+        name: raw.profile?.name?.trim() ?? "",
+        role: raw.profile?.role?.trim() ?? "",
+        workspace: raw.profile?.workspace?.trim() || "My workspace",
       },
       projects: (raw.projects ?? []).map((project) => Project.fromJSON(project).toJSON()),
       tasks: tasks.map((task) => task.toJSON()),

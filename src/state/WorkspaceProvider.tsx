@@ -8,7 +8,6 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { createSeedWorkspace } from "../data/seed";
 import { Workspace } from "../domain/models";
 import {
   createWorkspaceRepository,
@@ -31,7 +30,6 @@ interface WorkspaceContextValue {
   update: (recipe: (current: Workspace) => Workspace) => void;
   beginFocus: (taskId: string) => void;
   exportCopy: () => Promise<void>;
-  resetDemo: () => Promise<void>;
 }
 
 const WorkspaceContext = createContext<WorkspaceContextValue | null>(null);
@@ -91,12 +89,12 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
           setWorkspace(restored);
           setSaveState("saved");
         } else {
-          const seed = createSeedWorkspace();
-          workspaceRef.current = seed;
+          const empty = Workspace.empty();
+          workspaceRef.current = empty;
           skipNextSaveRef.current = true;
-          setWorkspace(seed);
+          setWorkspace(empty);
           try {
-            await repository.save(seed.toJSON());
+            await repository.save(empty.toJSON());
             setSaveState("saved");
             setLastSavedAt(new Date());
           } catch (error) {
@@ -106,13 +104,13 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         console.error("Tasker could not open the saved workspace.", error);
-        const seed = createSeedWorkspace();
-        workspaceRef.current = seed;
+        const empty = Workspace.empty();
+        workspaceRef.current = empty;
         skipNextSaveRef.current = true;
-        setWorkspace(seed);
+        setWorkspace(empty);
         setSaveState("error");
         pushToast({
-          title: "Started from the sample workspace",
+          title: "Started with an empty workspace",
           detail: "The saved workspace could not be read. Your next change will write a fresh copy.",
           tone: "error",
           durationMs: 7000,
@@ -225,31 +223,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
     }
   }, [pushToast, repository]);
 
-  const resetDemo = useCallback(async () => {
-    try {
-      await repository.reset();
-      const seed = createSeedWorkspace();
-      workspaceRef.current = seed;
-      skipNextSaveRef.current = true;
-      setWorkspace(seed);
-      setSaveState("saved");
-      await repository.save(seed.toJSON());
-      setLastSavedAt(new Date());
-      pushToast({
-        title: "Sample workspace restored",
-        detail: "Projects, tasks, and activity are back to their original state.",
-        tone: "success",
-      });
-    } catch (error) {
-      console.error("Tasker could not reset the workspace.", error);
-      pushToast({
-        title: "Reset failed",
-        detail: "The local database could not be reset.",
-        tone: "error",
-      });
-    }
-  }, [pushToast, repository]);
-
   const value = useMemo<WorkspaceContextValue>(
     () => ({
       workspace,
@@ -262,7 +235,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       update,
       beginFocus,
       exportCopy,
-      resetDemo,
     }),
     [
       workspace,
@@ -275,7 +247,6 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       update,
       beginFocus,
       exportCopy,
-      resetDemo,
     ],
   );
 

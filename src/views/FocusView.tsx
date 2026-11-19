@@ -46,7 +46,8 @@ export function FocusView({
     .slice(0, 4);
   const upNextMinutes = upNext.reduce((total, task) => total + task.estimateMin, 0);
   const nextCheckIn = workspace.nextScheduledToday(now);
-  const firstName = workspace.profile.name.split(/\s+/)[0] ?? workspace.profile.name;
+  const firstName = workspace.profile.name.trim().split(/\s+/)[0] ?? "";
+
   const candidates = workspace.tasks
     .filter((task) => !task.isDone && task.id !== activeTask?.id)
     .sort((a, b) => {
@@ -73,7 +74,8 @@ export function FocusView({
           <div>
             <p className="eyebrow">{formatLongDate(now)}</p>
             <h1 className="page-title">
-              {greetingFor(now)}, {firstName}
+              {greetingFor(now)}
+              {firstName ? `, ${firstName}` : ""}
             </h1>
             <p className="subtitle">One clear priority, then the next.</p>
           </div>

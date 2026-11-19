@@ -264,6 +264,7 @@ pub fn load(connection: &Connection) -> Result<Option<Value>, String> {
     })))
 }
 
+#[cfg(test)]
 pub fn reset(connection: &mut Connection) -> Result<(), String> {
     let transaction = connection.transaction().map_err(database_error)?;
     for table in ["tasks", "projects", "activities", "meta"] {
@@ -297,7 +298,7 @@ pub fn import_legacy(connection: &mut Connection, path: &Path) -> Result<bool, S
 }
 
 fn default_profile() -> Value {
-    json!({ "name": "", "role": "", "workspace": "Tasker" })
+    json!({ "name": "", "role": "", "workspace": "My workspace" })
 }
 
 fn default_preferences() -> Value {
@@ -367,7 +368,7 @@ mod tests {
     fn sample_workspace() -> Value {
         json!({
             "version": 1,
-            "profile": { "name": "Maya Chen", "role": "Developer", "workspace": "Maya's space" },
+            "profile": { "name": "Test User", "role": "Tester", "workspace": "Test workspace" },
             "projects": [
                 {
                     "id": "project-1",
@@ -451,7 +452,7 @@ mod tests {
         let loaded = load(&connection).expect("load").expect("workspace");
 
         assert_eq!(loaded["version"], 1);
-        assert_eq!(loaded["profile"]["name"], "Maya Chen");
+        assert_eq!(loaded["profile"]["name"], "Test User");
         assert_eq!(loaded["preferences"]["focusMinutes"], 25);
         assert_eq!(loaded["focusTaskId"], "task-1");
         assert_eq!(loaded["createdAt"], "2026-01-01T09:00:00.000Z");

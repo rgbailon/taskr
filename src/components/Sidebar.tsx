@@ -4,7 +4,6 @@ import { useWorkspace } from "../state/WorkspaceProvider";
 import { LogoMark } from "./LogoMark";
 import { Icon, type IconName } from "./Icon";
 import { ProjectDot } from "./ProjectMark";
-import { ConfirmDialog } from "./Modal";
 import { useTheme, type ThemeChoice } from "../state/ThemeProvider";
 
 type SidebarMenu = "workspace" | "profile" | null;
@@ -29,11 +28,9 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
     storagePath,
     repositoryKind,
     exportCopy,
-    resetDemo,
   } = useWorkspace();
   const { choice: appearance, setChoice: setAppearance } = useTheme();
   const [menu, setMenu] = useState<SidebarMenu>(null);
-  const [confirmReset, setConfirmReset] = useState(false);
 
   useEffect(() => {
     if (!menu) return;
@@ -71,7 +68,10 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
   if (!workspace) return <aside className="sidebar" />;
 
   const profile = workspace.profile;
-  const initials = profile.name
+  const displayName = profile.name || "You";
+  const displayRole = profile.role || "Local workspace";
+  const displayWorkspace = profile.workspace || "My workspace";
+  const initials = displayName
     .split(/\s+/)
     .filter(Boolean)
     .map((part) => part[0])
@@ -103,7 +103,7 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
           </span>
           <span className="workspace-copy">
             <span className="workspace-label">WORKSPACE</span>
-            <span className="workspace-name">{profile.workspace}</span>
+            <span className="workspace-name">{displayWorkspace}</span>
           </span>
           <Icon name="chevron-down" size={15} className="workspace-chevron" />
         </button>
@@ -112,7 +112,7 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
           <div className="sidebar-popover workspace-popover" role="dialog" aria-label="Workspace details">
             <div className="popover-heading">
               <span className="popover-label">LOCAL WORKSPACE</span>
-              <strong>{profile.workspace}</strong>
+              <strong>{displayWorkspace}</strong>
             </div>
             <p className="popover-note">
               Tasks, projects, notes, and activity stay on this device. Nothing leaves your computer.
@@ -215,8 +215,8 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
             {initials}
           </span>
           <span className="profile-copy">
-            <strong>{profile.name}</strong>
-            <span>{profile.role}</span>
+            <strong>{displayName}</strong>
+            <span>{displayRole}</span>
           </span>
           <span className="profile-more" aria-hidden="true">
             <Icon name="more" size={16} />
@@ -227,7 +227,7 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
           <div className="sidebar-popover profile-popover" role="menu" aria-label="Tasker menu">
             <div className="popover-heading">
               <span className="popover-label">LOCAL-FIRST</span>
-              <strong>{profile.workspace}</strong>
+              <strong>{displayWorkspace}</strong>
               <code className="storage-path" title={storagePath}>
                 {storagePath || "Resolving location…"}
               </code>
@@ -276,19 +276,6 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
                 ))}
               </div>
             </div>
-            <div className="menu-separator" />
-            <button
-              type="button"
-              role="menuitem"
-              className="menu-item menu-danger"
-              onClick={() => {
-                setMenu(null);
-                setConfirmReset(true);
-              }}
-            >
-              <Icon name="refresh" size={16} />
-              Reset sample data…
-            </button>
             <div className="popover-footer">
               <span>Tasker 1.0.0</span>
               <span>{repositoryKind === "tauri" ? "Desktop" : "Preview"}</span>
@@ -296,19 +283,6 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
           </div>
         ) : null}
       </div>
-
-      <ConfirmDialog
-        open={confirmReset}
-        title="Reset to the sample workspace?"
-        description="Every task, project, note, and activity entry you changed will be replaced by the original sample data. This cannot be undone."
-        confirmLabel="Reset workspace"
-        danger
-        onClose={() => setConfirmReset(false)}
-        onConfirm={() => {
-          setConfirmReset(false);
-          void resetDemo();
-        }}
-      />
     </aside>
   );
 }

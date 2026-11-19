@@ -8,11 +8,10 @@ export interface WorkspaceRepository {
   load(): Promise<WorkspaceData | null>;
   save(data: WorkspaceData): Promise<void>;
   exportCopy(data: WorkspaceData): Promise<string>;
-  reset(): Promise<void>;
   location(): Promise<string>;
 }
 
-const BROWSER_KEY = "tasker.workspace.v1";
+const BROWSER_KEY = "tasker.workspace.v2";
 
 export function isTauriRuntime(): boolean {
   return typeof window !== "undefined" && "__TAURI_INTERNALS__" in window;
@@ -33,10 +32,6 @@ export class TauriWorkspaceRepository implements WorkspaceRepository {
 
   async exportCopy(data: WorkspaceData): Promise<string> {
     return invoke<string>("export_workspace", { data: JSON.stringify(data) });
-  }
-
-  async reset(): Promise<void> {
-    await invoke("reset_workspace");
   }
 
   async location(): Promise<string> {
@@ -66,10 +61,6 @@ export class BrowserWorkspaceRepository implements WorkspaceRepository {
     anchor.click();
     URL.revokeObjectURL(url);
     return "Downloads folder";
-  }
-
-  async reset(): Promise<void> {
-    window.localStorage.removeItem(BROWSER_KEY);
   }
 
   async location(): Promise<string> {

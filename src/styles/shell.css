@@ -639,19 +639,6 @@
   color: var(--ink);
 }
 
-.menu-danger {
-  color: var(--danger);
-}
-
-.menu-danger svg {
-  color: var(--danger);
-}
-
-.menu-danger:hover {
-  background: var(--danger-tint);
-  color: var(--danger);
-}
-
 .menu-shortcut {
   margin-left: auto;
   font-size: 10.5px;

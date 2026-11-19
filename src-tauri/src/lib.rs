@@ -70,12 +70,6 @@ fn export_workspace(app: AppHandle, data: String) -> Result<String, String> {
 }
 
 #[tauri::command]
-fn reset_workspace(app: AppHandle) -> Result<(), String> {
-    let mut connection = db::open(&database_path(&app)?)?;
-    db::reset(&mut connection)
-}
-
-#[tauri::command]
 fn storage_location(app: AppHandle) -> Result<String, String> {
     Ok(database_path(&app)?.to_string_lossy().into_owned())
 }
@@ -88,7 +82,6 @@ pub fn run() {
             load_workspace,
             save_workspace,
             export_workspace,
-            reset_workspace,
             storage_location
         ])
         .run(tauri::generate_context!())
