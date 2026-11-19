@@ -16,6 +16,7 @@ import { ProgressBar } from "../components/ProgressBar";
 import { ProjectMark } from "../components/ProjectMark";
 import { StatusPill } from "../components/StatusPill";
 import { ProjectModal } from "../components/ProjectModal";
+import { ConfirmDialog } from "../components/Modal";
 
 type ProjectFilter = "all" | TaskStatus;
 
@@ -23,15 +24,18 @@ export function ProjectView({
   projectId,
   onOpenTask,
   onNewTaskForProject,
+  onProjectDeleted,
 }: {
   projectId: string;
   onOpenTask: (taskId: string) => void;
   onNewTaskForProject: (projectId: string) => void;
+  onProjectDeleted: () => void;
 }) {
   const { workspace, update } = useWorkspace();
   const { pushToast } = useToast();
   const [filter, setFilter] = useState<ProjectFilter>("all");
   const [editOpen, setEditOpen] = useState(false);
+  const [confirmDelete, setConfirmDelete] = useState(false);
 
   if (!workspace) return null;
   const project = workspace.projectById(projectId);
@@ -283,6 +287,19 @@ export function ProjectView({
           <p>{health.detail}</p>
           <span className="health-dot" style={{ background: project.color }} aria-hidden="true" />
         </div>
+
+        <div className="rail-divider" />
+
+        <div className="rail-block">
+          <button
+            type="button"
+            className="text-link text-link-danger"
+            onClick={() => setConfirmDelete(true)}
+          >
+            <Icon name="trash" size={15} />
+            Delete project
+          </button>
+        </div>
       </aside>
 
       <ProjectModal
@@ -290,6 +307,21 @@ export function ProjectView({
         project={project}
         onClose={() => setEditOpen(false)}
         onCreated={() => setEditOpen(false)}
+      />
+
+      <ConfirmDialog
+        open={confirmDelete}
+        title="Delete this project?"
+        description={`“${project.name}” will be removed. Open tasks move to the Inbox and keep their details. This cannot be undone.`}
+        confirmLabel="Delete project"
+        danger
+        onClose={() => setConfirmDelete(false)}
+        onConfirm={() => {
+          setConfirmDelete(false);
+          update((current) => current.deleteProject(project.id));
+          pushToast({ title: "Project deleted", detail: project.name });
+          onProjectDeleted();
+        }}
       />
     </>
   );

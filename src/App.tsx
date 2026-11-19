@@ -173,6 +173,7 @@ export function App() {
             projectId={route.projectId}
             onOpenTask={(taskId) => navigate({ view: "task", taskId })}
             onNewTaskForProject={(projectId) => openQuickAdd({ projectId })}
+            onProjectDeleted={() => navigate({ view: "inbox" })}
           />
         ) : null}
 

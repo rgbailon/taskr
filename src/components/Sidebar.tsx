@@ -2,11 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import type { Route } from "../app/routes";
 import { useWorkspace } from "../state/WorkspaceProvider";
 import { LogoMark } from "./LogoMark";
-import { Icon } from "./Icon";
+import { Icon, type IconName } from "./Icon";
 import { ProjectDot } from "./ProjectMark";
 import { ConfirmDialog } from "./Modal";
+import { useTheme, type ThemeChoice } from "../state/ThemeProvider";
 
 type SidebarMenu = "workspace" | "profile" | null;
+
+const APPEARANCE_OPTIONS: Array<{ value: ThemeChoice; label: string; icon: IconName }> = [
+  { value: "system", label: "System", icon: "monitor" },
+  { value: "light", label: "Light", icon: "sun" },
+  { value: "dark", label: "Dark", icon: "moon" },
+];
 
 interface SidebarProps {
   route: Route;
@@ -24,6 +31,7 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
     exportCopy,
     resetDemo,
   } = useWorkspace();
+  const { choice: appearance, setChoice: setAppearance } = useTheme();
   const [menu, setMenu] = useState<SidebarMenu>(null);
   const [confirmReset, setConfirmReset] = useState(false);
 
@@ -250,6 +258,24 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
               Keyboard shortcuts
               <span className="menu-shortcut">?</span>
             </button>
+            <div className="appearance-block">
+              <span className="popover-label">APPEARANCE</span>
+              <div className="appearance-options" role="radiogroup" aria-label="Appearance">
+                {APPEARANCE_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={appearance === option.value}
+                    className={`appearance-option${appearance === option.value ? " is-active" : ""}`}
+                    onClick={() => setAppearance(option.value)}
+                  >
+                    <Icon name={option.icon} size={14} />
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <div className="menu-separator" />
             <button
               type="button"

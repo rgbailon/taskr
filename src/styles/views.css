@@ -84,7 +84,7 @@
 }
 
 button.project-chip:hover {
-  background: #f3f6f9;
+  background: var(--surface-muted);
   color: var(--ink);
 }
 
@@ -211,7 +211,7 @@ button.project-chip:hover {
 }
 
 .criteria-item:hover {
-  background: #f6f9fb;
+  background: var(--surface-hover-soft);
 }
 
 .criteria-item.is-done {
@@ -296,7 +296,7 @@ button.project-chip:hover {
   padding: 11px 13px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #fbfcfd;
+  background: var(--surface-soft);
   text-align: left;
   transition:
     border-color 0.16s var(--ease),
@@ -304,8 +304,8 @@ button.project-chip:hover {
 }
 
 .focus-candidate:hover {
-  border-color: #cfdfd9;
-  background: #f6fbfa;
+  border-color: var(--hover-border);
+  background: var(--accent-soft);
 }
 
 .focus-candidate-copy {
@@ -348,7 +348,7 @@ button.project-chip:hover {
 }
 
 .up-next .stack-list {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -393,7 +393,7 @@ button.project-chip:hover {
 }
 
 .up-next .quiet-empty {
-  background: #fff;
+  background: var(--surface);
 }
 
 /* Focus rail details */
@@ -408,7 +408,7 @@ button.project-chip:hover {
   gap: 12px;
   min-height: 56px;
   padding: 8px 14px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 11px;
   box-shadow: var(--shadow-xs);
@@ -453,7 +453,7 @@ button.project-chip:hover {
 }
 
 .capture-field input::placeholder {
-  color: #a2afbb;
+  color: var(--placeholder);
 }
 
 .capture-hint {
@@ -470,7 +470,7 @@ button.project-chip:hover {
 }
 
 .inbox-list {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -491,7 +491,7 @@ button.project-chip:hover {
 }
 
 .inbox-row:hover {
-  background: #fbfcfd;
+  background: var(--surface-soft);
 }
 
 .inbox-copy {
@@ -548,13 +548,13 @@ button.project-chip:hover {
 }
 
 .inline-select:hover {
-  background: #f3f6f9;
+  background: var(--surface-muted);
   color: var(--ink-soft);
 }
 
 .inline-select:focus {
   border-color: rgba(67, 170, 155, 0.5);
-  background: #fff;
+  background: var(--input-bg);
 }
 
 .inline-select-wrap.is-short {
@@ -573,7 +573,7 @@ button.project-chip:hover {
   padding: 0 8px;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: #fff;
+  background: var(--surface);
   color: var(--muted-strong);
   font-size: 10.5px;
   font-weight: 550;
@@ -585,7 +585,7 @@ button.project-chip:hover {
 
 .mini-action:hover {
   border-color: rgba(67, 170, 155, 0.45);
-  background: #f6fbfa;
+  background: var(--accent-soft);
   color: var(--teal-deep);
 }
 
@@ -623,12 +623,12 @@ button.project-chip:hover {
 
 .triage-blue {
   background: var(--blue-tint);
-  color: #5a79b8;
+  color: var(--blue-ink);
 }
 
 .triage-amber {
   background: var(--amber-tint);
-  color: #9a6f36;
+  color: var(--amber-ink);
 }
 
 .triage-step div {
@@ -680,7 +680,7 @@ button.project-chip:hover {
 }
 
 .tip-card {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 12px 13px;
@@ -737,7 +737,7 @@ button.project-chip:hover {
   align-items: center;
   gap: 2px;
   padding: 10px 4px 8px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   transition:
@@ -747,7 +747,7 @@ button.project-chip:hover {
 }
 
 .week-day:hover {
-  border-color: #d2dfe7;
+  border-color: var(--border-input);
   box-shadow: var(--shadow-xs);
 }
 
@@ -795,7 +795,7 @@ button.project-chip:hover {
 }
 
 .week-day.is-selected .week-day-meta {
-  color: #5f8c85;
+  color: var(--teal-ink);
 }
 
 .week-today-dot {
@@ -836,7 +836,7 @@ button.project-chip:hover {
 }
 
 .day-task-list {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -858,7 +858,7 @@ button.project-chip:hover {
 }
 
 .schedule-row:hover {
-  background: #fbfcfd;
+  background: var(--surface-soft);
 }
 
 .row-accent {
@@ -868,7 +868,7 @@ button.project-chip:hover {
   bottom: 10px;
   width: 3px;
   border-radius: 0 2px 2px 0;
-  background: var(--row-color, #c9d2dc);
+  background: var(--row-color, var(--node-border));
   opacity: 0.85;
 }
 
@@ -903,7 +903,7 @@ button.project-chip:hover {
 .schedule-row.is-done .schedule-copy strong {
   color: var(--faint);
   text-decoration: line-through;
-  text-decoration-color: #c9d3dc;
+  text-decoration-color: var(--strike);
 }
 
 .schedule-copy:hover strong {
@@ -935,7 +935,7 @@ button.project-chip:hover {
 }
 
 .focus-block-list button:hover {
-  background: #f1f5f8;
+  background: var(--surface-hover);
 }
 
 .focus-block-time {
@@ -1070,7 +1070,7 @@ button.project-chip:hover {
   align-items: center;
   gap: 9px;
   padding: 11px 13px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: 10px;
   text-align: left;
@@ -1081,12 +1081,12 @@ button.project-chip:hover {
 }
 
 .status-card:hover {
-  border-color: #d3dfe7;
+  border-color: var(--border-input);
 }
 
 .status-card.is-active {
   border-color: rgba(67, 170, 155, 0.6);
-  background: #f8fcfb;
+  background: var(--accent-soft);
   box-shadow: 0 0 0 3px rgba(67, 170, 155, 0.11);
 }
 
@@ -1098,7 +1098,7 @@ button.project-chip:hover {
 }
 
 .dot-todo {
-  background: #93a4b5;
+  background: var(--todo-dot);
 }
 
 .dot-in_progress {
@@ -1106,7 +1106,7 @@ button.project-chip:hover {
 }
 
 .dot-done {
-  background: #74a883;
+  background: var(--success);
 }
 
 .status-card-label {
@@ -1126,7 +1126,7 @@ button.project-chip:hover {
 }
 
 .project-task-list {
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
   overflow: hidden;
@@ -1146,7 +1146,7 @@ button.project-chip:hover {
 }
 
 .project-task-row.is-done {
-  background: #fcfdfd;
+  background: var(--surface-soft);
 }
 
 .project-task-copy {
@@ -1173,7 +1173,7 @@ button.project-chip:hover {
 .project-task-row.is-done .project-task-copy strong {
   color: var(--faint);
   text-decoration: line-through;
-  text-decoration-color: #c9d3dc;
+  text-decoration-color: var(--strike);
 }
 
 .project-task-copy:hover strong {
@@ -1198,7 +1198,7 @@ button.project-chip:hover {
   height: 28px;
   border-radius: 8px;
   background: var(--amber-tint);
-  color: #9a6f36;
+  color: var(--amber-ink);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1358,11 +1358,11 @@ button.project-chip:hover {
 }
 
 .detail-title-input:hover {
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--raised-hover);
 }
 
 .detail-title-input:focus {
-  background: #fff;
+  background: var(--input-bg);
   border-color: rgba(67, 170, 155, 0.5);
   box-shadow: var(--focus-ring);
 }
@@ -1405,12 +1405,12 @@ button.project-chip:hover {
 }
 
 .detail-description:hover {
-  background: #fbfcfd;
+  background: var(--surface-soft);
 }
 
 .detail-description:focus {
   border-color: rgba(67, 170, 155, 0.45);
-  background: #fff;
+  background: var(--input-bg);
 }
 
 .detail-criteria-head {
@@ -1488,7 +1488,7 @@ button.project-chip:hover {
 }
 
 .criterion-add input::placeholder {
-  color: #a6b2bd;
+  color: var(--placeholder);
 }
 
 .detail-notes {
@@ -1548,12 +1548,12 @@ button.project-chip:hover {
 }
 
 .meta-select:hover {
-  background: #f3f6f9;
+  background: var(--surface-muted);
 }
 
 .meta-select:focus {
   border-color: rgba(67, 170, 155, 0.45);
-  background: #fff;
+  background: var(--input-bg);
 }
 
 .detail-focus-stat {
@@ -1562,7 +1562,7 @@ button.project-chip:hover {
   gap: 2px;
   padding: 9px 12px;
   border-radius: 9px;
-  background: #f6f9fb;
+  background: var(--surface-muted);
   margin-top: 2px;
 }
 
@@ -1601,7 +1601,7 @@ button.project-chip:hover {
 }
 
 .project-link:hover {
-  background: #f3f6f9;
+  background: var(--surface-muted);
   color: var(--teal-deep);
 }
 

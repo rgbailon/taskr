@@ -20,7 +20,7 @@ export function TitleBar({ breadcrumb }: { breadcrumb: string }) {
 
   const tooltip =
     saveState === "error"
-      ? "Tasker could not write the workspace file."
+      ? "Tasker could not write to the local database."
       : `${storagePath || (repositoryKind === "tauri" ? "Local app data" : "Browser preview storage")}${
           lastSavedAt ? ` · Saved ${formatSavedTime(lastSavedAt)}` : ""
         }`;

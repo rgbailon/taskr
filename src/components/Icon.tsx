@@ -27,7 +27,10 @@ export type IconName =
   | "folder"
   | "clock"
   | "list"
-  | "flag";
+  | "flag"
+  | "sun"
+  | "moon"
+  | "monitor";
 
 interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
   name: IconName;
@@ -204,6 +207,22 @@ function renderPath(name: IconName) {
       );
     case "flag":
       return <path d="M6 21V4h5l1 2h6l-1.7 5L18 16h-6l-1-2H6" />;
+    case "sun":
+      return (
+        <>
+          <circle cx="12" cy="12" r="4" />
+          <path d="M12 2.8v2.4M12 18.8v2.4M4.5 4.5l1.7 1.7M17.8 17.8l1.7 1.7M2.8 12h2.4M18.8 12h2.4M4.5 19.5l1.7-1.7M17.8 6.2l1.7-1.7" />
+        </>
+      );
+    case "moon":
+      return <path d="M20 14.6A8.6 8.6 0 0 1 9.4 4a8.6 8.6 0 1 0 10.6 10.6z" />;
+    case "monitor":
+      return (
+        <>
+          <rect x="3.2" y="4.6" width="17.6" height="12" rx="2.2" />
+          <path d="M9 20.4h6M12 16.6v3.8" />
+        </>
+      );
     default:
       return null;
   }

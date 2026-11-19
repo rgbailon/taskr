@@ -15,13 +15,13 @@
 }
 
 .modal::backdrop {
-  background: rgba(21, 45, 63, 0.28);
+  background: var(--overlay);
   backdrop-filter: blur(2px);
 }
 
 .modal-card {
-  background: #fff;
-  border: 1px solid rgba(231, 236, 241, 0.9);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 18px;
   box-shadow: var(--shadow-md);
   padding: 22px 24px;
@@ -129,7 +129,7 @@
 }
 
 .palette-search input::placeholder {
-  color: #a2afbb;
+  color: var(--placeholder);
 }
 
 .palette-esc {
@@ -170,14 +170,14 @@
 }
 
 .palette-item.is-active {
-  background: #f1f7f6;
+  background: var(--accent-soft);
 }
 
 .palette-icon {
   width: 26px;
   height: 26px;
   border-radius: 7px;
-  background: #f2f5f8;
+  background: var(--surface-muted);
   color: var(--muted);
   display: inline-flex;
   align-items: center;
@@ -220,7 +220,7 @@
   gap: 16px;
   padding: 8px 16px;
   border-top: 1px solid var(--divider);
-  background: #fbfcfd;
+  background: var(--surface-soft);
   font-size: 10px;
   color: var(--muted);
 }
@@ -274,7 +274,7 @@
   padding: 9px 11px;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #fbfcfd;
+  background: var(--surface-soft);
   text-align: left;
   transition:
     border-color 0.14s var(--ease),
@@ -282,12 +282,12 @@
 }
 
 .plan-candidate:hover {
-  border-color: #d4e2df;
+  border-color: var(--hover-border);
 }
 
 .plan-candidate.is-selected {
   border-color: rgba(67, 170, 155, 0.5);
-  background: #f6fbfa;
+  background: var(--accent-soft);
 }
 
 .plan-candidate-copy {
@@ -341,7 +341,7 @@
 
 .plan-empty {
   padding: 22px 18px;
-  border: 1px dashed #dbe3ea;
+  border: 1px dashed var(--border-input);
   border-radius: 10px;
   text-align: center;
 }

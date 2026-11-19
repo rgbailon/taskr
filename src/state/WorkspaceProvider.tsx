@@ -100,7 +100,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
             setSaveState("saved");
             setLastSavedAt(new Date());
           } catch (error) {
-            console.error("Tasker could not create the first workspace file.", error);
+            console.error("Tasker could not save the first workspace.", error);
             setSaveState("error");
           }
         }
@@ -113,7 +113,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
         setSaveState("error");
         pushToast({
           title: "Started from the sample workspace",
-          detail: "The saved file could not be read. Your next change will write a fresh copy.",
+          detail: "The saved workspace could not be read. Your next change will write a fresh copy.",
           tone: "error",
           durationMs: 7000,
         });
@@ -244,7 +244,7 @@ export function WorkspaceProvider({ children }: { children: ReactNode }) {
       console.error("Tasker could not reset the workspace.", error);
       pushToast({
         title: "Reset failed",
-        detail: "The workspace file could not be replaced.",
+        detail: "The local database could not be reset.",
         tone: "error",
       });
     }

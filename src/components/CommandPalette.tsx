@@ -4,6 +4,7 @@ import { useWorkspace } from "../state/WorkspaceProvider";
 import { Modal } from "./Modal";
 import { Icon, type IconName } from "./Icon";
 import { shortcutLabel } from "../lib/platform";
+import { useTheme } from "../state/ThemeProvider";
 
 interface CommandEntry {
   id: string;
@@ -58,6 +59,7 @@ function CommandPaletteBody({
   onShowShortcuts,
 }: Omit<CommandPaletteProps, "open">) {
   const { workspace } = useWorkspace();
+  const { choice, setChoice } = useTheme();
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(0);
   const listRef = useRef<HTMLDivElement>(null);
@@ -131,6 +133,34 @@ function CommandPaletteBody({
     ];
     const actions = actionEntries.filter((entry) => matches(entry.label));
 
+    const appearanceCandidates: CommandEntry[] = [
+      {
+        id: "appearance-system",
+        label: "Match system appearance",
+        hint: choice === "system" ? "Current" : undefined,
+        icon: "monitor",
+        group: "Appearance",
+        run: () => setChoice("system"),
+      },
+      {
+        id: "appearance-light",
+        label: "Use light appearance",
+        hint: choice === "light" ? "Current" : undefined,
+        icon: "sun",
+        group: "Appearance",
+        run: () => setChoice("light"),
+      },
+      {
+        id: "appearance-dark",
+        label: "Use dark appearance",
+        hint: choice === "dark" ? "Current" : undefined,
+        icon: "moon",
+        group: "Appearance",
+        run: () => setChoice("dark"),
+      },
+    ];
+    const appearanceEntries = appearanceCandidates.filter((entry) => matches(entry.label));
+
     const projectEntries: CommandEntry[] = workspace.projects
       .filter((project) => matches(project.name, project.description))
       .map((project) => ({
@@ -160,10 +190,21 @@ function CommandPaletteBody({
     return [
       { label: "Go", items: go },
       { label: "Actions", items: actions },
+      { label: "Appearance", items: appearanceEntries },
       { label: "Projects", items: projectEntries },
       { label: normalized ? "Tasks" : "Open tasks", items: taskEntries },
     ].filter((group) => group.items.length > 0);
-  }, [workspace, query, onNavigate, onNewTask, onNewProject, onPlanDay, onShowShortcuts]);
+  }, [
+    workspace,
+    query,
+    onNavigate,
+    onNewTask,
+    onNewProject,
+    onPlanDay,
+    onShowShortcuts,
+    choice,
+    setChoice,
+  ]);
 
   const flatItems = useMemo(() => groups.flatMap((group) => group.items), [groups]);
   const activeEntry = flatItems[activeIndex];

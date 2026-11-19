@@ -855,6 +855,32 @@ export class Workspace {
     );
   }
 
+  /** Removes a project and returns its tasks to the Inbox instead of deleting them. */
+  deleteProject(projectId: string): Workspace {
+    const project = this.projectById(projectId);
+    if (!project) return this;
+
+    const detached = new Map(
+      this.tasksForProject(projectId).map((task) => [
+        task.id,
+        (task.isDone
+          ? task.withProject(null)
+          : task.patch({
+              projectId: null,
+              status: "inbox",
+              scheduledDate: null,
+              scheduledTime: null,
+            })
+        ).toJSON(),
+      ]),
+    );
+
+    return this.cloneWith({
+      projects: this.data.projects.filter((entry) => entry.id !== projectId),
+      tasks: this.data.tasks.map((task) => detached.get(task.id) ?? task),
+    });
+  }
+
   toJSON(): WorkspaceData {
     return {
       version: 1,

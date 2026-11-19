@@ -74,7 +74,7 @@ a {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: #cfd8e1 transparent;
+  scrollbar-color: var(--scrollbar) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -83,7 +83,7 @@ a {
 }
 
 *::-webkit-scrollbar-thumb {
-  background: #cfd8e1;
+  background: var(--scrollbar);
   border-radius: 8px;
   border: 2px solid transparent;
   background-clip: content-box;
@@ -136,7 +136,7 @@ a {
 
 .button-primary {
   background: var(--navy);
-  color: #fff;
+  color: var(--on-accent);
   box-shadow: 0 1px 2px rgba(23, 59, 83, 0.24);
 }
 
@@ -145,25 +145,25 @@ a {
 }
 
 .button-quiet {
-  background: #fff;
+  background: var(--surface);
   color: var(--ink-soft);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-xs);
 }
 
 .button-quiet:hover:not(:disabled) {
-  background: var(--card-soft);
-  border-color: #dde4eb;
+  background: var(--surface-hover);
+  border-color: var(--border-input);
   color: var(--ink);
 }
 
 .button-danger {
   background: var(--danger);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .button-danger:hover {
-  background: #a74c4c;
+  background: var(--danger-hover);
 }
 
 .button-small {
@@ -187,7 +187,7 @@ a {
 }
 
 .icon-button:hover {
-  background: #eef2f6;
+  background: var(--surface-hover);
   color: var(--ink);
 }
 
@@ -210,6 +210,18 @@ a {
 
 .text-link:hover {
   color: var(--teal-ink);
+}
+
+.text-link-danger {
+  color: var(--danger);
+}
+
+.text-link-danger:hover {
+  color: var(--danger-hover);
+}
+
+.text-link-danger:hover svg {
+  transform: none;
 }
 
 .text-link svg {
@@ -285,7 +297,7 @@ a {
   width: 3px;
   height: 3px;
   border-radius: 50%;
-  background: #b9c4cf;
+  background: var(--separator-dot);
   flex: none;
 }
 
@@ -297,9 +309,9 @@ a {
   justify-content: center;
   flex: none;
   border-radius: 50%;
-  border: 1.5px solid #c9d2dc;
-  background: #fff;
-  color: #fff;
+  border: 1.5px solid var(--control-border);
+  background: var(--surface);
+  color: var(--on-accent);
   transition:
     background 0.16s var(--ease),
     border-color 0.16s var(--ease),
@@ -308,7 +320,7 @@ a {
 
 .check-circle:hover {
   border-color: var(--teal);
-  background: #f4fbfa;
+  background: var(--accent-soft);
 }
 
 .check-circle.is-checked {
@@ -317,7 +329,7 @@ a {
 }
 
 .check-circle.is-checked:hover {
-  background: #3aa092;
+  background: var(--accent-hover);
 }
 
 .check-circle:active {
@@ -382,7 +394,7 @@ a {
   border-radius: 999px;
   font-size: 11px;
   font-weight: 600;
-  background: #f1f5f8;
+  background: var(--neutral-chip);
   color: var(--muted-strong);
   white-space: nowrap;
 }
@@ -401,18 +413,18 @@ a {
 }
 
 .status-pill.status-todo {
-  background: #eef2f7;
-  color: #5a6d80;
+  background: var(--todo-bg);
+  color: var(--todo-ink);
 }
 
 .status-pill.status-inbox {
   background: var(--amber-tint);
-  color: #9a6f36;
+  color: var(--amber-ink);
 }
 
 .status-pill.status-done {
-  background: #eef5ef;
-  color: #4d7d5b;
+  background: var(--success-tint);
+  color: var(--success-ink);
 }
 
 .status-pill.is-subtle {
@@ -430,7 +442,7 @@ a {
   height: 22px;
   padding: 0 8px;
   border-radius: 6px;
-  background: #f3f6f9;
+  background: var(--surface-muted);
   color: var(--muted);
   font-size: 11px;
   font-weight: 500;
@@ -442,11 +454,11 @@ a {
   align-items: center;
   gap: 9px;
   padding: 16px 18px;
-  border: 1px dashed #dbe3ea;
+  border: 1px dashed var(--border-input);
   border-radius: var(--radius-lg);
   color: var(--muted);
   font-size: 12.5px;
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--quiet-empty-bg);
 }
 
 .quiet-empty svg {
@@ -468,7 +480,7 @@ a {
   align-items: center;
   text-align: center;
   padding: 46px 24px;
-  background: #fff;
+  background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
 }
@@ -520,7 +532,7 @@ a {
   width: 100%;
   border: 1px solid var(--border-input);
   border-radius: 9px;
-  background: #fff;
+  background: var(--input-bg);
   padding: 9px 11px;
   font-size: 13px;
   color: var(--ink);
@@ -532,7 +544,7 @@ a {
 
 .field input::placeholder,
 .field textarea::placeholder {
-  color: #a6b2bd;
+  color: var(--placeholder);
 }
 
 .field textarea {
@@ -549,7 +561,7 @@ a {
 }
 
 .field input:disabled {
-  background: #f6f8fa;
+  background: var(--input-disabled-bg);
   color: var(--faint);
 }
 
@@ -605,7 +617,7 @@ a {
   height: 26px;
   border-radius: 8px;
   border: 2px solid transparent;
-  box-shadow: inset 0 0 0 1px rgba(24, 37, 54, 0.08);
+  box-shadow: inset 0 0 0 1px var(--swatch-ring);
   transition:
     transform 0.14s var(--ease),
     box-shadow 0.14s var(--ease);
@@ -617,7 +629,7 @@ a {
 
 .swatch.is-active {
   box-shadow:
-    0 0 0 2px #fff,
+    0 0 0 2px var(--surface),
     0 0 0 4px rgba(67, 170, 155, 0.6);
 }
 
@@ -637,7 +649,7 @@ a {
   width: 100%;
   border: 1px solid var(--border);
   border-radius: 9px;
-  background: #fbfcfd;
+  background: var(--surface-soft);
   padding: 10px 12px;
   font-size: 12.5px;
   line-height: 1.6;
@@ -652,13 +664,13 @@ a {
 }
 
 .notes-box:focus {
-  background: #fff;
+  background: var(--input-bg);
   border-color: rgba(67, 170, 155, 0.6);
   box-shadow: var(--focus-ring);
 }
 
 .notes-box::placeholder {
-  color: #a6b2bd;
+  color: var(--placeholder);
 }
 
 .notes-box-short {
@@ -673,9 +685,9 @@ kbd {
   height: 20px;
   padding: 0 5px;
   border-radius: 5px;
-  border: 1px solid #dde4eb;
+  border: 1px solid var(--border-input);
   border-bottom-width: 2px;
-  background: #fff;
+  background: var(--surface);
   color: var(--muted-strong);
   font-family: var(--font-sans);
   font-size: 10.5px;

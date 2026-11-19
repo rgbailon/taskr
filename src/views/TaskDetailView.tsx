@@ -439,6 +439,14 @@ export function TaskDetailView({
             <Icon name="inbox" size={15} />
             Move back to Inbox
           </button>
+          <button
+            type="button"
+            className="text-link text-link-danger"
+            onClick={() => setConfirmDelete(true)}
+          >
+            <Icon name="trash" size={15} />
+            Delete task
+          </button>
         </div>
       </aside>
 

@@ -10,13 +10,16 @@ import { App } from "./App";
 import { ToastProvider } from "./state/ToastProvider";
 import { WorkspaceProvider } from "./state/WorkspaceProvider";
 import { FocusTimerProvider } from "./state/FocusTimerProvider";
+import { ThemeProvider } from "./state/ThemeProvider";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ToastProvider>
       <WorkspaceProvider>
         <FocusTimerProvider>
-          <App />
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
         </FocusTimerProvider>
       </WorkspaceProvider>
     </ToastProvider>
