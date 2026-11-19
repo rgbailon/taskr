@@ -31,7 +31,8 @@ export type IconName =
   | "sun"
   | "moon"
   | "monitor"
-  | "lock";
+  | "lock"
+  | "terminal";
 
 interface IconProps extends Omit<SVGProps<SVGSVGElement>, "name"> {
   name: IconName;
@@ -225,6 +226,19 @@ function renderPath(name: IconName) {
         </>
       );
     case "monitor":
+      return (
+        <>
+          <rect x="3" y="4" width="18" height="16" rx="2.4" />
+          <path d="M7 8.5l3 3-3 3M11.5 14.5h5" />
+        </>
+      );
+    case "terminal":
+      return (
+        <>
+          <rect x="3" y="4" width="18" height="16" rx="2.4" />
+          <path d="M7 9l2.6 2.4L7 13.8M11.5 14.5h5" />
+        </>
+      );
       return (
         <>
           <rect x="3.2" y="4.6" width="17.6" height="12" rx="2.2" />

@@ -161,6 +161,15 @@ export function Sidebar({ route, onNavigate, onNewProject, onShowShortcuts }: Si
           <Icon name="calendar" size={17} />
           <span>Upcoming</span>
         </button>
+        <button
+          type="button"
+          className={`nav-item${route.view === "terminal" ? " is-active" : ""}`}
+          aria-current={route.view === "terminal" ? "page" : undefined}
+          onClick={() => onNavigate({ view: "terminal" })}
+        >
+          <Icon name="terminal" size={17} />
+          <span>Terminal</span>
+        </button>
       </nav>
 
       <div className="projects-head">

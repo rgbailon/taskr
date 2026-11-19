@@ -15,6 +15,7 @@ import { InboxView } from "./views/InboxView";
 import { UpcomingView } from "./views/UpcomingView";
 import { ProjectView } from "./views/ProjectView";
 import { TaskDetailView } from "./views/TaskDetailView";
+import { TerminalView } from "./views/TerminalView";
 
 type Overlay = "palette" | "quick-add" | "project" | "plan-day" | "shortcuts" | null;
 
@@ -120,6 +121,11 @@ export function App() {
           navigate({ view: "upcoming" });
           return;
         }
+        if (event.key === "4") {
+          event.preventDefault();
+          navigate({ view: "terminal" });
+          return;
+        }
       }
       if (typing) return;
       if (event.key === "Escape") {
@@ -187,6 +193,8 @@ export function App() {
             }
           />
         ) : null}
+
+        {!isFocusLocked && route.view === "terminal" ? <TerminalView /> : null}
 
         {!isFocusLocked && route.view === "project" ? (
           <ProjectView

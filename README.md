@@ -10,6 +10,7 @@ Tasker is designed around one idea: a short list of real tasks, one clear priori
 - **Focus lock** — while the timer runs, the sidebar and command palette are hidden, other tasks are out of reach, and the only controls are the timer, the task checklist, notes, and Mark done. Pause to unlock Tasker; resume to lock it again.
 - **Inbox** — quick capture, inline project and estimate triage, and one-click scheduling for today or tomorrow.
 - **Upcoming** — a week strip, per-day plans, focus blocks, weekly stats, and direct task completion.
+- **Terminal** — an embedded PowerShell session rooted in Tasker's data folder, with helper commands (`Get-TaskerTasks`, `New-TaskerTask`, `Invoke-TaskerSql`, …) for adding, editing, deleting, and querying every piece of app data.
 - **Projects** — progress toward a milestone, status filters, project notes, and a health summary.
 - **Task details** — inline title/description/notes editing, acceptance criteria, status, project, priority, due date, and estimate controls.
 - **Deleting work** — delete a task from the Task details actions, or delete a project from the project rail. Both ask for confirmation; deleting a project keeps its tasks and moves open ones to the Inbox.
@@ -83,6 +84,7 @@ The appearance choice is a device preference, not workspace content. It is store
 | `Ctrl/⌘ 1` | Focus workspace |
 | `Ctrl/⌘ 2` | Inbox |
 | `Ctrl/⌘ 3` | Upcoming |
+| `Ctrl/⌘ 4` | Terminal |
 | `Space` | Start or pause the focus timer (outside inputs) |
 | `?` | Show the shortcut list |
 | `Esc` | Close a dialog or step back |

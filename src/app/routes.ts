@@ -2,6 +2,7 @@ export type Route =
   | { view: "focus" }
   | { view: "inbox" }
   | { view: "upcoming" }
+  | { view: "terminal" }
   | { view: "project"; projectId: string }
   | { view: "task"; taskId: string };
 
@@ -25,6 +26,8 @@ export function breadcrumbFor(route: Route, projectName?: string): string {
       return "Inbox";
     case "upcoming":
       return "Upcoming";
+    case "terminal":
+      return "Terminal";
     case "project":
       return projectName ?? "Project";
     case "task":
