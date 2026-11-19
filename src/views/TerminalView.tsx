@@ -77,42 +77,44 @@ export function TerminalView() {
   };
 
   return (
-    <div className="terminal-view">
-      <header className="terminal-head">
-        <div>
-          <p className="eyebrow">TERMINAL</p>
-          <h1 className="page-title">PowerShell</h1>
-          <p className="subtitle">
-            A real PowerShell session rooted in Tasker&apos;s data folder. Use the Tasker commands below, or any PowerShell/SQLite command.
-          </p>
-        </div>
-        <button type="button" className="button button-quiet" onClick={restart}>
-          <Icon name="refresh" size={15} />
-          Restart shell
-        </button>
-      </header>
+    <main className="main terminal-main">
+      <div className="terminal-view">
+        <header className="terminal-head">
+          <div>
+            <p className="eyebrow">TERMINAL</p>
+            <h1 className="page-title">PowerShell</h1>
+            <p className="subtitle">
+              A real PowerShell session rooted in Tasker&apos;s data folder. Run Tasker commands below, or any PowerShell/SQLite command.
+            </p>
+          </div>
+          <button type="button" className="button button-quiet" onClick={restart}>
+            <Icon name="refresh" size={15} />
+            Restart shell
+          </button>
+        </header>
 
-      <section className="terminal-help card">
-        <h2>Tasker commands</h2>
-        <div className="terminal-help-grid">
-          <code>Get-TaskerDb</code>
-          <span>Path to tasker.db</span>
-          <code>Get-TaskerTasks</code>
-          <span>List tasks as JSON</span>
-          <code>Get-TaskerProjects</code>
-          <span>List projects as JSON</span>
-          <code>New-TaskerTask -Title "..." -EstimateMin 25</code>
-          <span>Create an inbox task</span>
-          <code>Remove-TaskerTask -Id "task-..."</code>
-          <span>Delete a task</span>
-          <code>Remove-TaskerProject -Id "project-..."</code>
-          <span>Delete a project</span>
-          <code>Invoke-TaskerSql "SELECT ..."</code>
-          <span>Run any SQL against tasker.db</span>
-        </div>
-      </section>
+        <section className="terminal-help card">
+          <h2>Tasker commands</h2>
+          <div className="terminal-help-grid">
+            <code>Get-TaskerDb</code>
+            <span>Path to tasker.db</span>
+            <code>Get-TaskerTasks</code>
+            <span>List tasks as JSON</span>
+            <code>Get-TaskerProjects</code>
+            <span>List projects as JSON</span>
+            <code>New-TaskerTask -Title "..."</code>
+            <span>Create an inbox task</span>
+            <code>Remove-TaskerTask -Id "task-..."</code>
+            <span>Delete a task</span>
+            <code>Remove-TaskerProject -Id "project-..."</code>
+            <span>Delete a project</span>
+            <code>Invoke-TaskerSql "SELECT ..."</code>
+            <span>Run any SQL against tasker.db</span>
+          </div>
+        </section>
 
-      <div className="terminal-frame" ref={containerRef} />
-    </div>
+        <div className="terminal-frame" ref={containerRef} />
+      </div>
+    </main>
   );
 }
